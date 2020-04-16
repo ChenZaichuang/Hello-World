@@ -1,0 +1,12 @@
+[submodule "ngrok_ssh_client"]
+	path = ngrok_ssh_client
+	url = git@github.com:ChenZaichuang/Ngrok-SSH-Client.git
+[submodule "dns_resolver"]
+	path = dns_resolver
+	url = git@github.com:ChenZaichuang/DNS-Resolver.git
+[submodule "python_utils"]
+	path = python_utils
+	url = git@github.com:ChenZaichuang/Python-Utils.git
+[submodule "configuration"]
+	path = configuration
+	url = git@github.com:ChenZaichuang/Configuration.git
