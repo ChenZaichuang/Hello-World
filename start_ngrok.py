@@ -22,7 +22,7 @@ def kill_ngrok():
         pid_number = match_res.groups()[0]
         kill_result = subprocess.run(f"kill -9 {pid_number}", shell=True, stdout=subprocess.PIPE,
                                      stderr=subprocess.PIPE)
-        logger.info(f'kill result: {kill_result}')
+        logger.info(f'kill result: {kill_result.stdout} | {kill_result.stdout}')
     else:
         logger.info(f'No ngrok process found...')
     time.sleep(2)
@@ -33,9 +33,9 @@ def start_ngrok():
     res = subprocess.Popen('nohup ngrok tcp 22 --region au &', shell=True, stdout=subprocess.PIPE,
                            stderr=subprocess.PIPE)
     if res.returncode == 0:
-        logger.info(f"Successfully start ngrok: {res.stdout}")
+        logger.info(f"Successfully start ngrok: {res.stdout} | {res.stdout}")
     else:
-        logger.info(f"Fail to start ngrok: {res.stderr}")
+        logger.info(f"Fail to start ngrok: {res.stdout} | {res.stderr}")
 
 
 def commit_config(public_url):
@@ -45,9 +45,11 @@ def commit_config(public_url):
     logger.info('finish write ngrok info to file')
     res = subprocess.run(f"cd configuration && git checkout master && git branch --unset-upstream || git add . && git status && git commit -m '{datetime.now()}' && git push origin master --force", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     if res.returncode == 0:
-        logger.info(f"Successfully push commit: {res.stdout}")
+        logger.info(f"Successfully push commit: {res.stdout} | {res.stderr}")
+        return True
     else:
-        logger.info(f"Fail to push commit: {res.stderr}")
+        logger.info(f"Fail to push commit: {res.stdout} | {res.stderr}")
+        return False
 
 def get_public_url():
     try:
@@ -95,8 +97,10 @@ if __name__ == '__main__':
             elif public_url == 'ngrok in init':
                 sleep(2)
             else:
-                commit_config(public_url)
-                status = 'check_network_accessibility'
+                if commit_config(public_url):
+                    status = 'check_network_accessibility'
+                else:
+                    sleep(2)
 
         elif status == 'check_network_accessibility':
             logger.info(f'status = {status}')
