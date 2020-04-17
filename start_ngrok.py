@@ -42,10 +42,10 @@ def start_ngrok():
 
 def commit_config(public_url):
     logger.info(f"public_url: {public_url}")
-    with open(f'configuration/firefly_ssh.txt', 'w') as f:
+    with open(f'{main_path}/configuration/firefly_ssh.txt', 'w') as f:
         f.write(public_url)
     logger.info('finish write ngrok info to file')
-    res = subprocess.run(f"cd configuration && git checkout master && git branch --unset-upstream || git add . && git status && git commit -m '{datetime.now()}' && git push origin master --force", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    res = subprocess.run(f"cd {main_path}/configuration && git checkout master && git branch --unset-upstream || git add . && git status && git commit -m '{datetime.now()}' && git push origin master --force", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     if res.returncode == 0:
         logger.info(f"Successfully push commit: {res.stdout} | {res.stderr}")
         return True
