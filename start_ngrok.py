@@ -9,7 +9,7 @@ from datetime import datetime
 import requests
 from gevent import sleep
 
-logger = CustomLogger(console_logger_config={'level': logging.info}, file_logger_config={'filename': 'start_ngrok.log'})
+logger = CustomLogger(console_logger_config={'level': logging.INFO}, file_logger_config={'filename': 'start_ngrok.log'})
 
 
 def kill_ngrok():
