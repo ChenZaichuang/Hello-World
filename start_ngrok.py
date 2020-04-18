@@ -46,11 +46,14 @@ def commit_config(public_url):
     logger.info(f"public_url: {public_url}")
     host, port = public_url.split(':')
     with open(f'{main_path}/ngrok_ssh_client/config.json', 'r') as f:
-        config = json.loads(f.read())
-        config['host'] = host
-        config['port'] = port
+        try:
+            config = json.loads(f.read())
+        except:
+            config = {"host": "", "port": "", "username": "firefly", "password": "firefly"}
+    config['host'] = host
+    config['port'] = port
     with open(f'{main_path}/ngrok_ssh_client/config.json', 'w') as f:
-        f.write(config)
+        f.write(json.dumps(config, indent=4))
     logger.info('finish write ngrok info to file')
     res = subprocess.run(f"cd {main_path}/ngrok_ssh_client && git checkout master && git add . && git status && git commit -m '{datetime.now()}' && git push origin master --force", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     if res.returncode == 0:
