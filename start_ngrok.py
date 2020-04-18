@@ -1,3 +1,5 @@
+import json
+
 from ngrok_ssh_client.ip_evaluate import get_accessible_ssh_tunnels
 from python_utils.logger import CustomLogger
 import logging
@@ -42,10 +44,15 @@ def start_ngrok():
 
 def commit_config(public_url):
     logger.info(f"public_url: {public_url}")
-    with open(f'{main_path}/configuration/firefly_ssh.txt', 'w') as f:
-        f.write(public_url)
+    host, port = public_url.split(':')
+    with open(f'{main_path}/ngrok_ssh_client/config.json', 'r') as f:
+        config = json.loads(f.read())
+        config['host'] = host
+        config['port'] = port
+    with open(f'{main_path}/ngrok_ssh_client/config.json', 'w') as f:
+        f.write(config)
     logger.info('finish write ngrok info to file')
-    res = subprocess.run(f"cd {main_path}/configuration && git checkout master && git branch --unset-upstream || git add . && git status && git commit -m '{datetime.now()}' && git push origin master --force", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    res = subprocess.run(f"cd {main_path}/ngrok_ssh_client && git checkout master && git add . && git status && git commit -m '{datetime.now()}' && git push origin master --force", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     if res.returncode == 0:
         logger.info(f"Successfully push commit: {res.stdout} | {res.stderr}")
         return True
