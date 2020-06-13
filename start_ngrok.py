@@ -1,3 +1,5 @@
+from gevent import monkey
+monkey.patch_all(thread=False)
 import json
 
 from ngrok_ssh_client.ip_evaluate import get_accessible_ssh_tunnels
