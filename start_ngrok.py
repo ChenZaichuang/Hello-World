@@ -16,8 +16,7 @@ import requests
 from gevent import sleep
 
 main_path = os.path.dirname(os.path.abspath(sys.argv[0]))
-logger = CustomLogger(console_logger_config={'level': logging.INFO}, file_logger_config={'filename': f'{main_path}/start_ngrok.log'})
-
+logger = CustomLogger(level=logging.INFO, to_file_name=f'{main_path}/start_ngrok.log')
 def kill_ngrok():
     # res = "533 ?        00:09:48 ngrok"
     ngrok_process_str = subprocess.run(f"ps -e | grep ngrok", shell=True, stdout=subprocess.PIPE,
